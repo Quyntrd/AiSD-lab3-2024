@@ -38,11 +38,23 @@ int main() {
 	std::cout << "______________________________" << std::endl;
 	graph1.add_vertex(5);
 	graph1.add_vertex(6);
+	graph1.add_edge(3, 2, 11);
+	graph1.add_edge(2, 3, 10);
 	graph1.add_edge(3, 5, 100);
 	graph1.add_edge(3, 6, 6);
 	graph1.add_edge(5, 6, 1);
-	auto path = graph1.shortest_path(2, 3);
-	for (auto& i : path) {
-		std::cout << i.distance << std::endl;
+	std::cout << "  2\t3\t4\t5\t6" << std::endl;
+	for (auto i : graph1.vertices()) {
+		std::cout << i << ": ";
+		for (auto j : graph1.vertices()) {
+			auto path = graph1.shortest_path(i, j);
+			auto distance = 0;
+			for (auto d : path) {
+				distance += d.distance;
+			}
+			if (distance <= -100000) std::cout << "inf" << "\t";
+			else std::cout << distance << "\t";
+		}
+		std::cout << std::endl;
 	}
 }
