@@ -7,6 +7,8 @@
 #include <iterator>
 #include <functional>
 #include <iostream>
+#include<unordered_set>
+#include <queue>
 
 template<typename Vertex, typename Distance = double>
 class Graph {
@@ -100,5 +102,34 @@ public:
     //поиск кратчайшего пути
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {}
     //обход
-    std::vector<Vertex>  walk(const Vertex& start_vertex)const {}
+    std::vector<Vertex> walk(const Vertex& start_vertex) const {
+        std::vector<Vertex> result;
+        if (!has_vertex(start_vertex)) {
+            return result;
+        }
+        std::unordered_map<Vertex, bool> visited;
+        std::queue<Vertex> queue;
+
+        visited[start_vertex] = true;
+        queue.push(start_vertex);
+        while (!queue.empty()) {
+            Vertex current = queue.front();
+            queue.pop();
+            result.push_back(current);
+            // Перебираем ребра для текущей вершины
+            for (const auto& pair : _graph) {
+                const auto& edges = pair.second;
+                if (pair.first == current) {
+                    for (const auto& edge : edges) {
+                        if (!visited[edge.to]) {
+                            visited[edge.to] = true;
+                            queue.push(edge.to);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 };
