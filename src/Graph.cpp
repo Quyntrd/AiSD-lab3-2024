@@ -66,7 +66,18 @@ public:
         return false;
     }
     bool remove_edge(const Edge& e) {
-        return remove_edge(e.from, e.to);
+        auto it = _graph.find(e.from);
+        if (it != _graph.end()) {
+            auto& edges = it->second;
+            auto edge_it = std::remove_if(edges.begin(), edges.end(), [&e](const Edge& edge) {
+                return edge.from == e.from && edge.to == e.to && edge.distance == e.distance;
+                });
+            if (edge_it != edges.end()) {
+                edges.erase(edge_it, edges.end());
+                return true;
+            }
+        }
+        return false;
     }
     bool has_edge(const Vertex& from, const Vertex& to) const {
         auto it = _graph.find(from);
@@ -77,7 +88,14 @@ public:
         return false;    
     }
     bool has_edge(const Edge& e) const {
-        return has_edge(e.from, e.to);
+        auto it = _graph.find(e.from);
+        if (it != _graph.end()) {
+            const auto& edges = it->second;
+            return std::any_of(edges.begin(), edges.end(), [&e](const Edge& edge) {
+                return edge.from == e.from && edge.to == e.to && edge.distance == e.distance;
+                });
+        }
+        return false;
     }
     std::vector<Edge> edges(const Vertex& vertex) {
         auto it = _graph.find(vertex);
@@ -158,3 +176,27 @@ public:
         return result;
     }
 };
+template<typename Vertex, typename Distance = double>
+Vertex find_optimal_warehouse(const Graph<Vertex, Distance>& graph) {
+    std::vector<Vertex> trade_points = graph.vertices();
+    Vertex optimal_warehouse = Vertex();
+    Distance min_avg_distance = std::numeric_limits<Distance>::max();
+    for (const auto& trade_point : trade_points) {
+        Distance total_distance = 0;
+        for (const auto& destination : trade_points) {
+            if (trade_point != destination) {
+                std::vector<typename Graph<Vertex, Distance>::Edge> shortest_paths = graph.shortest_path(trade_point, destination);
+                for (const auto& edge : shortest_paths) {
+                    total_distance += edge.distance;
+                }
+            }
+        }
+        // Учитываем только длину пути к торговым точкам, кроме текущей
+        Distance avg_distance = total_distance / (trade_points.size() - 1);
+        if (avg_distance < min_avg_distance) {
+            min_avg_distance = avg_distance;
+            optimal_warehouse = trade_point;
+        }
+    }
+    return optimal_warehouse;
+}

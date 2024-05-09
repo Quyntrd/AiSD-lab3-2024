@@ -1,5 +1,4 @@
 ﻿#include <Graph.cpp>
-
 int main() {
 	Graph<int, double> graph1;
 	graph1.add_vertex(1);
@@ -10,7 +9,14 @@ int main() {
 	graph1.add_edge(1, 3, 10.0);
 	graph1.add_edge(1, 4, 10.0);
 	graph1.add_edge(4, 3, 5.0);
-	graph1.remove_edge(graph1.edges(1)[0]);
+	std::cout << "______________________________" << std::endl;
+	std::cout << graph1.degree(1) << std::endl;
+	for (auto i : graph1.edges(1)) {
+		graph1.remove_edge(i);
+	}
+	std::cout << "______________________________" << std::endl;
+	std::cout << graph1.degree(1) << std::endl;
+	std::cout << "______________________________" << std::endl;
 	auto vertices = graph1.vertices();
 	for (auto i: vertices) {
 		std::cout << i << std::endl;
@@ -24,7 +30,6 @@ int main() {
 	std::cout << "______________________________" << std::endl;
 	std::cout << graph1.order() << std::endl;
 	std::cout << "______________________________" << std::endl;
-	std::cout << graph1.degree(1) << std::endl;
 	std::cout << graph1.degree(2) << std::endl;
 	std::cout << graph1.degree(3) << std::endl;
 	std::cout << graph1.degree(4) << std::endl;
@@ -42,14 +47,20 @@ int main() {
 	graph1.add_edge(2, 3, 10);
 	graph1.add_edge(3, 5, 100);
 	graph1.add_edge(3, 6, 6);
-	graph1.add_edge(5, 6, 1);
+	graph1.add_edge(5, 6, 152);
+	graph1.add_edge(5, 2, 7);
+	graph1.add_edge(5, 3, 10);
+	graph1.add_edge(6, 2, 44);
+	graph1.add_edge(6, 3, 33);
+	graph1.add_edge(6, 4, 18);
+	graph1.add_edge(6, 5, 1);
 	std::cout << "  2\t3\t4\t5\t6" << std::endl;
 	for (auto i : graph1.vertices()) {
 		std::cout << i << ": ";
 		for (auto j : graph1.vertices()) {
 			auto path = graph1.shortest_path(i, j);
 			auto distance = 0;
-			for (auto d : path) {
+			for (auto& d : path) {
 				distance += d.distance;
 			}
 			if (distance <= -100000) std::cout << "inf" << "\t";
@@ -57,4 +68,5 @@ int main() {
 		}
 		std::cout << std::endl;
 	}
+	std::cout << "Best warehouse: " << find_optimal_warehouse(graph1) << std::endl;
 }
