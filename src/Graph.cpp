@@ -42,19 +42,44 @@ public:
         return false;
     }
     std::vector<Vertex> vertices() const {
-        
+        std::vector<Vertex> result;
+        for (const auto& pair; _graph) {
+            result.push_back(pair.first);
+        }
+        return result;
     }
-
-
-    //проверка-добавление-удаление ребер
-    void add_edge(const Vertex& from, const Vertex& to, const Distance& d) {}
-    bool remove_edge(const Vertex& from, const Vertex& to) {}
-    bool remove_edge(const Edge& e) {} //c учетом расстояния
-    bool has_edge(const Vertex& from, const Vertex& to) const {}
-    bool has_edge(const Edge& e) const {} //c учетом расстояния в Edge
-
-    //получение всех ребер, выходящих из вершины
-        std::vector<Edge> edges(const Vertex& vertex) {}
+    void add_edge(const Vertex& from, const Vertex& to, const Distance& d) {
+        if (has_vertex(from) && has_vertex(to)) {
+            _gpaph[from].push_back(Edge(from, to, d));
+        }
+    }
+    bool remove_edge(const Vertex& from, const Vertex& to) {
+        auto it = _graph.find(from);
+        if (it != _graph.end()) {
+            auto& edges = it->second;
+            auto edge_it = std::remove_if(edges.begin(), edges.end(), [&to](const Edge& e) {return e.to == to; });
+            if (edge_it != edges.end()) {
+                edges.erase(edge_it, edges.end());
+                return true;
+            }
+        }
+        return false;
+    }
+    bool remove_edge(const Edge& e) {
+        return remove_edge(e.from, e.to);
+    }
+    bool has_edge(const Vertex& from, const Vertex& to) const {
+        auto it = _graph.find(from);
+        if (it != _graph.end()) {
+            const auto& edges = it->second;
+            return std::any_of(edges.begin(), edges.end(), [&to](const Edge& e) {return e.to == to; });
+        }
+        return false;    
+    }
+    bool has_edge(const Edge& e) const {
+        return has_edge(e.from, e.to);
+    }
+    std::vector<Edge> edges(const Vertex& vertex) {}
 
         size_t order() const {}//порядок 
         size_t degree(const Vertex& v) const {} //степень вершины
