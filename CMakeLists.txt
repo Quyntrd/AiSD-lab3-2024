@@ -1,15 +1,22 @@
-﻿# CMakeList.txt: проект CMake для AiSD-lab3-2024; включите исходный код и определения,
-# укажите здесь логику для конкретного проекта.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.11)
 
-project ("AiSD-lab3-2024")
+project (Graph-v1 CXX)
 
-# Добавьте источник в исполняемый файл этого проекта.
-add_executable (AiSD-lab3-2024 "AiSD-lab3-2024.cpp" "AiSD-lab3-2024.h")
+set(CMAKE_CXX_STANDARD 23)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET AiSD-lab3-2024 PROPERTY CXX_STANDARD 20)
+if (MSVC)
+
+	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS true)
+
+	if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4" )
+	endif()
 endif()
 
-# TODO: Добавьте тесты и целевые объекты, если это необходимо.
+add_library(Graph-v1 SHARED "src/Graph.cpp")
+
+target_include_directories(Graph-v1 PUBLIC "src")
+add_executable (Graph-v1-main "app/main.cpp")
+target_link_libraries(Graph-v1-main Graph-v1)
