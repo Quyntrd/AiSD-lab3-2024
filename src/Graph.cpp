@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iterator>
 #include <functional>
+#include <iostream>
 
 template<typename Vertex, typename Distance = double>
 class Graph {
@@ -28,12 +29,12 @@ public:
         }
     }
     bool remove_vertex(const Vertex& v) {
-        auto it = _grapg.find(v);
+        auto it = _graph.find(v);
         if (it != _graph.end()) {
             _graph.erase(it);
             for (auto& pair : _graph) {
                 auto& edges = pair.second;
-                edges.erase(std::remove_if(edges.begin(), edges.end(), [&v](const Edg& e) {
+                edges.erase(std::remove_if(edges.begin(), edges.end(), [&v](const Edge& e) {
                     return e.to == v;
                     }), edges.end());
             }
@@ -43,14 +44,14 @@ public:
     }
     std::vector<Vertex> vertices() const {
         std::vector<Vertex> result;
-        for (const auto& pair; _graph) {
+        for (const auto& pair: _graph) {
             result.push_back(pair.first);
         }
         return result;
     }
     void add_edge(const Vertex& from, const Vertex& to, const Distance& d) {
         if (has_vertex(from) && has_vertex(to)) {
-            _gpaph[from].push_back(Edge(from, to, d));
+            _graph[from].push_back(Edge(from, to, d));
         }
     }
     bool remove_edge(const Vertex& from, const Vertex& to) {
