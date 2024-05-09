@@ -2,12 +2,9 @@
 
 #include <vector>
 #include <unordered_map>
-#include <utility>
 #include <algorithm>
 #include <iterator>
-#include <functional>
 #include <iostream>
-#include<unordered_set>
 #include <queue>
 
 template<typename Vertex, typename Distance = double>
@@ -100,8 +97,36 @@ public:
         return 0;
     }
     //поиск кратчайшего пути
-    std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {}
-    //обход
+    std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
+        std::unordered_map<Vertex, Distance> dist;
+        std::unordered_map<Vertex, Vertex> predecessor;
+        for (const auto& vertex : vertices()) {
+            dist[vertex] = std::numeric_limits<Distance>::infinity();
+            predecessor[vertex] = Vertex();
+        }
+        dist[from] = 0;
+        for (size_t i = 0; i < order() - 1; ++i) {
+            for (const auto& vertex : vertices()) {
+                auto it = _graph.find(vertex);
+                if (it != _graph.end()) {
+                    const auto& edges = it->second;
+                    for (const auto& edge : edges) {
+                        if (dist[vertex] + edge.distance < dist[edge.to]) {
+                            dist[edge.to] = dist[vertex] + edge.distance;
+                            predecessor[edge.to] = vertex;
+                        }
+                    }
+                }
+            }
+        }
+        std::vector<Edge> path;
+        for (Vertex current = to; current != Vertex(); current = predecessor[current]) {
+            Vertex pred = predecessor[current];
+            path.push_back({ pred, current, dist[current] });
+        }
+        std::reverse(path.begin(), path.end());
+        return path;
+    }
     std::vector<Vertex> walk(const Vertex& start_vertex) const {
         std::vector<Vertex> result;
         if (!has_vertex(start_vertex)) {

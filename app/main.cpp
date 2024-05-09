@@ -15,12 +15,15 @@ int main() {
 	for (auto i: vertices) {
 		std::cout << i << std::endl;
 	}
+	std::cout << "______________________________" << std::endl;
 	graph1.remove_vertex(1);
 	auto vertices1 = graph1.vertices();
 	for (auto i : vertices1) {
 		std::cout << i << std::endl;
 	}
+	std::cout << "______________________________" << std::endl;
 	std::cout << graph1.order() << std::endl;
+	std::cout << "______________________________" << std::endl;
 	std::cout << graph1.degree(1) << std::endl;
 	std::cout << graph1.degree(2) << std::endl;
 	std::cout << graph1.degree(3) << std::endl;
@@ -31,5 +34,15 @@ int main() {
 	auto walk = graph1.walk(2);
 	for (auto i : walk) {
 		std::cout << i << std::endl;
+	}
+	std::cout << "______________________________" << std::endl;
+	graph1.add_vertex(5);
+	graph1.add_vertex(6);
+	graph1.add_edge(3, 5, 100);
+	graph1.add_edge(3, 6, 6);
+	graph1.add_edge(5, 6, 1);
+	auto path = graph1.shortest_path(2, 3);
+	for (auto& i : path) {
+		std::cout << i.distance << std::endl;
 	}
 }
