@@ -79,12 +79,23 @@ public:
     bool has_edge(const Edge& e) const {
         return has_edge(e.from, e.to);
     }
-    std::vector<Edge> edges(const Vertex& vertex) {}
-
-        size_t order() const {}//порядок 
-        size_t degree(const Vertex& v) const {} //степень вершины
-
-
+    std::vector<Edge> edges(const Vertex& vertex) {
+        auto it = _graph.find(vertex);
+        if (it != _graph.end()) {
+            return it->second;
+        }
+        return std::vector<Edge>();
+    }
+    size_t order() const {
+        return _graph.size();
+    }
+    size_t degree(const Vertex& v) const {
+        auto it = _graph.find(v);
+        if (it != _graph.end()) {
+            return it->second.size();
+        }
+        return 0;
+    }
     //поиск кратчайшего пути
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {}
     //обход
