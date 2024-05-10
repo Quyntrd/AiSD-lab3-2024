@@ -189,7 +189,6 @@ Vertex find_optimal_warehouse(const Graph<Vertex, Distance>& graph) {
                 }
             }
         }
-        // Учитываем только длину пути к торговым точкам, кроме текущей
         Distance avg_distance = total_distance / (trade_points.size() - 1);
         if (avg_distance < min_avg_distance) {
             min_avg_distance = avg_distance;
