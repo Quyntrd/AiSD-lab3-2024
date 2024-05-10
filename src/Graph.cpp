@@ -114,7 +114,6 @@ public:
         }
         return 0;
     }
-    //поиск кратчайшего пути
     std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
         std::unordered_map<Vertex, Distance> dist;
         std::unordered_map<Vertex, Vertex> predecessor;
@@ -159,7 +158,6 @@ public:
             Vertex current = queue.front();
             queue.pop();
             result.push_back(current);
-            // Перебираем ребра для текущей вершины
             for (const auto& pair : _graph) {
                 const auto& edges = pair.second;
                 if (pair.first == current) {
